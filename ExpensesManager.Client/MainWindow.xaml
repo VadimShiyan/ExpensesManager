@@ -12,5 +12,7 @@
 
         <Button Content="Click" Click="Button_Click" Width="80" Height="30" />
 
+        <Button Content="SecondWindow" Click="OpenSecondWindow_Click" Width="80" Height="30" Margin="360,237,360,167" />
+
     </Grid>
 </Window>

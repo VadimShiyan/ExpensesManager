@@ -1,109 +1,151 @@
-﻿using System.ComponentModel;
-using ExpensesManager.DataAccess.Repositories;
-using ExpensesManager.Domain.DtoModels;
+﻿using ExpensesManager.Domain;
+using ExpensesManager.Domain.Entities;
+using ExpensesManager.Domain.Enums;
 using ExpensesManager.Infrastructure.Contracts.Repositories;
 using ExpensesManager.Infrastructure.Contracts.Services;
 
 namespace ExpensesManager.Application.Services
 {
-    public class BillService : IBillService, INotifyPropertyChanged
+    public class BillService : IBillService
     {
+        private const int PageSize = 10;
         private readonly IBillRepository _billRepository;
-        private string _statusMessage;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public string StatusMessage
-        {
-            get => _statusMessage;
-            set
-            {
-                _statusMessage = value;
-                OnPropertyChanged(nameof(StatusMessage));
-            }
-        }
+        private readonly List<Bill> _bills;
 
         public BillService(IBillRepository billRepository)
         {
-            if (billRepository is BillRepository repository)
-            {
-                repository.FileStatusChanged += OnFileStatusChanged;
-            }
             _billRepository = billRepository;
+            _bills = ReadFromFile();
         }
 
-
-        private void OnFileStatusChanged(string statusMessage)
+        public PagedResult<Bill> GetPaging(int page)
         {
-            StatusMessage = statusMessage;
+            var items = _bills.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+            var totalCount = _bills.Count();
+
+            return new PagedResult<Bill>
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
         }
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        public PagedResult<Bill> GetPagingBySorting(int page, ExpenseType? type = null, DateTime? startDate = null,
+            DateTime? endDate = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var query = _bills.AsQueryable();
+
+            if (type.HasValue)
+                query = query.Where(b => b.ExpenseType.Equals(type.Value));
+
+            if (startDate.HasValue)
+                query = query.Where(b => b.UpdatedDate >= startDate.Value);
+
+            if (endDate.HasValue)
+                query = query.Where(b => b.UpdatedDate <= endDate.Value);
+
+            var totalCount = query.Count();
+
+            var items = query.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+
+            return new PagedResult<Bill>
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
         }
 
-
-        public List<BillModel> GetAll()
+        public Bill? GetById(Guid id)
         {
-            var entities = _billRepository.GetAll();
-
-            return entities.Select(bill => new BillModel
-                {
-                    Id = bill.Id,
-                    CreatedDate = bill.CreatedDate,
-                    UpdatedDate = bill.UpdatedDate,
-                    ExpenseType = bill.ExpenseType,
-                    BillAmount = bill.BillAmount,
-                    BillDescription = bill.BillDescription,
-                    BillName = bill.BillName
-                })
-                .ToList();
+            return _bills.SingleOrDefault(c => c.Id.Equals(id));
         }
 
-        public List<BillModel> GetAllByType(string type)
+        public void AddBill(Bill bill)
         {
-            throw new NotImplementedException();
+            if (bill == null)
+                throw new ArgumentNullException(nameof(bill));
+
+            bill.Id = Guid.NewGuid();
+            bill.CreatedDate = DateTime.UtcNow;
+
+            _bills.Add(bill);
+
+            _billRepository.SaveData(_bills);
         }
 
-        public BillModel? GetById(Guid id)
+        public void Update(Bill bill)
         {
-            throw new NotImplementedException();
-        }
+            if (bill is null)
+                throw new ArgumentNullException(nameof(bill));
 
-        public void Create(BillModel billModel)
-        {
-            throw new NotImplementedException();
-        }
+            var model = _bills.SingleOrDefault(c => c.Id.Equals(bill.Id));
 
-        public void Update(BillModel billModel)
-        {
-            throw new NotImplementedException();
+            if (model is null)
+                throw new KeyNotFoundException($"The bill with ID '{bill.Id}' was not found.");
+
+            model.ExpenseType = bill.ExpenseType;
+            model.Amount = bill.Amount;
+            model.Description = bill.Description;
+            model.Name = bill.Name;
+            model.UpdatedDate = DateTime.UtcNow;
+
+            _billRepository.SaveData(_bills);
         }
 
         public void DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            var model = _bills.SingleOrDefault(c => c.Id.Equals(id));
+
+            if (model is null)
+                throw new KeyNotFoundException($"The bill with ID '{id}' was not found.");
+
+            _bills.Remove(model);
+
+            _billRepository.SaveData(_bills);
         }
 
-        public decimal GetTotalAmount(string? type, DateTime startDate, DateTime endDate)
+        public decimal GetTotalAmount(ExpenseType? type = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            throw new NotImplementedException();
+            var query = _bills.AsQueryable();
+
+            if (type.HasValue)
+                query = query.Where(b => b.ExpenseType == type.Value);
+
+            if (startDate.HasValue)
+                query = query.Where(b => b.UpdatedDate >= startDate.Value);
+
+            if (endDate.HasValue)
+                query = query.Where(b => b.UpdatedDate <= endDate.Value);
+
+            return query.Sum(b => b.Amount);
         }
 
-        public decimal GetTotalAmount()
+        public int GetTotalCount(ExpenseType? type = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            throw new NotImplementedException();
+            var query = _bills.AsQueryable();
+
+            if (type.HasValue)
+                query = query.Where(b => b.ExpenseType == type.Value);
+
+            if (startDate.HasValue)
+                query = query.Where(b => b.UpdatedDate >= startDate.Value);
+
+            if (endDate.HasValue)
+                query = query.Where(b => b.UpdatedDate <= endDate.Value);
+
+            return query.Count();
         }
 
-        public decimal GetTotalAmountByType(string type)
+        private List<Bill> ReadFromFile()
         {
-            throw new NotImplementedException();
-        }
+            if (_billRepository.IsFileExists())
+            {
+                return _billRepository.GetAll();
+            }
 
-        public decimal GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
-        {
-            throw new NotImplementedException();
+            _billRepository.CreateFile();
+
+            return new List<Bill>();
         }
     }
 }

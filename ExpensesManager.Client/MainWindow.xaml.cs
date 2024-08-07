@@ -1,15 +1,8 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using ExpensesManager.Domain.Entities;
 using ExpensesManager.Infrastructure.Contracts.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using ExpensesManager.Domain;
 
 namespace ExpensesManager.Client
 {
@@ -20,12 +13,16 @@ namespace ExpensesManager.Client
     {
         private readonly IBillService _billService;
         private readonly IServiceProvider _serviceProvider; //Внутри MainWindow, или любого другого окна, вы можете использовать DI для получения экземпляра нового окна и его открытия:
+        
+        private readonly PagedResult<Bill> _data;
         public MainWindow(IBillService billService, IServiceProvider serviceProvider)
         {
             _billService = billService;
             _serviceProvider = serviceProvider;
 
-            DataContext = billService; //need check this
+            _data = _billService.GetPaging(1);
+
+            DataContext = billService; //need check this impl
             InitializeComponent();
         }
 
@@ -37,9 +34,9 @@ namespace ExpensesManager.Client
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var count = _billService.GetAll().Count;
-            var statusMess = _billService.StatusMessage;
-            MessageBox.Show(statusMess + count);
+            var count = _billService.GetTotalCount();
+
+            MessageBox.Show("Hello" + count + _data.TotalCount);
         }
     }
 }

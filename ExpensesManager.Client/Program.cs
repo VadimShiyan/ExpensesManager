@@ -1,7 +1,9 @@
 ﻿using ExpensesManager.Application.Services;
 using ExpensesManager.DataAccess.Repositories;
+using ExpensesManager.Domain;
 using ExpensesManager.Infrastructure.Contracts.Repositories;
 using ExpensesManager.Infrastructure.Contracts.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,16 +17,27 @@ namespace ExpensesManager.Client
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                 {
+                    //добавление json файла с конфигом
+                    IConfiguration config = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json", optional: false)
+                        .Build();
+
+                    // Получение секции конфигурации
+                    var applicationSettings = config.GetSection("ApplicationSettings").Get<ApplicationSettings>()!;
+
+                    // Расширение переменных окружения и создание пути
+                    applicationSettings.FilePath = Environment.ExpandEnvironmentVariables(applicationSettings.FilePath);
+
+                    services.AddSingleton(applicationSettings);
+
                     // Регистрация основных сервисов и окон
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
-
                     services.AddTransient<SecondWindow>(); // Пример второго окна
 
                     // Регистрация других сервисов и репозиториев
-                    services.AddTransient<IBillService, BillService>();
-                    //services.AddSingleton<IBillRepository, BillRepository>(); //создать один экземпляр Репоз для всего приложения, что бы не чекать каждый запрос наличие файла, либо оставить Transient, что бы каждый раз проверял наличие файла?
-                    services.AddTransient<IBillRepository, BillRepository>(); 
+                    services.AddSingleton<IBillService, BillService>();
+                    services.AddSingleton<IBillRepository, BillRepository>(); 
                 })
                 .Build();
 

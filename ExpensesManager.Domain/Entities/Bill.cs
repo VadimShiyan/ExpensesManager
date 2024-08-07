@@ -2,11 +2,14 @@
 
 namespace ExpensesManager.Domain.Entities
 {
-    public class Bill : BaseEntity
+    public class Bill
     {
-        public decimal BillAmount { get; set; }
-        public string BillName { get; set; } = string.Empty;
-        public string BillDescription { get; set;} = string.Empty;
+        public Guid Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; } = null;
+        public decimal Amount { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set;} = string.Empty;
         public ExpenseType ExpenseType { get; set; }
     }
 }

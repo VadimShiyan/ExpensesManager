@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExpensesManager.DataAccess\ExpensesManager.DataAccess.csproj" />
+    <ProjectReference Include="..\ExpensesManager.Domain\ExpensesManager.Domain.csproj" />
     <ProjectReference Include="..\ExpensesManager.Infrastructure\ExpensesManager.Infrastructure.csproj" />
   </ItemGroup>
 
