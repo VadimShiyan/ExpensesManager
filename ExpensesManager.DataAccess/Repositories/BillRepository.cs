@@ -9,10 +9,11 @@ namespace ExpensesManager.DataAccess.Repositories
     {
         private const string FilePath = "expenses.json";
 
-        public event Action<string> FileStatusChanged = null!;
+        public event Action<string> FileStatusChanged;
 
         public BillRepository()
         {
+            //FileStatusChanged = delegate { };
             EnsureFileExist();
         }
 
@@ -25,7 +26,7 @@ namespace ExpensesManager.DataAccess.Repositories
         {
             if (!Enum.TryParse<ExpenseType>(type, true, out var enumValue))
                 throw new ArgumentException("Can't parse enum");
-            
+
             return ReadFromFile().Where(b => b.ExpenseType.Equals(enumValue)).ToList();
         }
 
@@ -36,7 +37,7 @@ namespace ExpensesManager.DataAccess.Repositories
 
         public void Create(Bill bill)
         {
-            if(bill is null)
+            if (bill is null)
                 throw new ArgumentNullException(nameof(bill));
 
             var bills = ReadFromFile();
@@ -76,49 +77,39 @@ namespace ExpensesManager.DataAccess.Repositories
         {
             var bills = ReadFromFile();
 
-            if (!bills.Any())
-                return 0;
-
-            return bills.Sum(b => b.BillAmount);
+            return bills.Any() ? bills.Sum(b => b.BillAmount) : 0;
         }
 
         public decimal GetTotalAmountByType(string type)
         {
             var bills = GetAllByType(type);
 
-            if (!bills.Any())
-                return 0;
-
-            return bills.Sum(b => b.BillAmount);
+            return bills.Any() ? bills.Sum(b => b.BillAmount) : 0;
         }
 
         public decimal GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
         {
             var bills = ReadFromFile().Where(b => b.UpdatedDate >= startDate && b.UpdatedDate <= endDate).ToList();
 
-            if (!bills.Any())
-                return 0;
-
-            return bills.Sum(b => b.BillAmount);
+            return bills.Any() ? bills.Sum(b => b.BillAmount) : 0;
         }
 
         private void EnsureFileExist()
         {
             try
             {
-                if (!File.Exists(FilePath))
+                if (File.Exists(FilePath))
                 {
-                    File.Create(FilePath).Dispose();
-                    FileStatusChanged.Invoke("File not found and created.");
+                    FileStatusChanged?.Invoke("File found and used.");
+                    return;
                 }
-                else
-                {
-                    FileStatusChanged.Invoke("File found and used.");
-                }
+
+                File.Create(FilePath).Dispose();
+                FileStatusChanged?.Invoke("File not found and created.");
             }
             catch (Exception e)
             {
-                FileStatusChanged.Invoke($"Error checking/creating file: {e.Message}");
+                FileStatusChanged?.Invoke($"Error checking/creating file: {e.Message}");
             }
         }
 
@@ -134,7 +125,7 @@ namespace ExpensesManager.DataAccess.Repositories
             }
             catch (Exception e)
             {
-                FileStatusChanged.Invoke($"Error reading file: {e.Message}");
+                FileStatusChanged?.Invoke($"Error reading file: {e.Message}");
 
                 return new List<Bill>();
             }
