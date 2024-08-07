@@ -23,5 +23,10 @@ namespace ExpensesManager.Client
         {
             InitializeComponent();
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
