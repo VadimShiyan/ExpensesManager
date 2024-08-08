@@ -50,7 +50,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="Apply filters" MinWidth="100" MaxWidth="250" Margin="5" Click="ApplyFilters_Click"/>
                     <Button Content="Clear filters" MinWidth="100" MaxWidth="250" Margin="5" Click="ClearFilters_Click"/>
-                    <Button Content="Info" Margin="5" HorizontalAlignment="Right" Click="Info_OnClick"></Button>
+                    <!--<Button Content="Info" Margin="5" HorizontalAlignment="Right" Click="Info_OnClick"></Button>-->
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="CreateButton" Content="Add new bill" MinWidth="100" MaxWidth="250" Margin="5" Click="CreateButton_Click" Background="GreenYellow"/>
@@ -142,40 +142,50 @@
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="Start date"/>
-                    <DatePicker x:Name="StartDateFilterStat" MinWidth="100" MaxWidth="200" SelectedDate="{Binding StartDate, Mode=TwoWay}"/>
+                    <DatePicker x:Name="StartDateFilterStat" MinWidth="100" MaxWidth="200" SelectedDate="{Binding StartDateStat, Mode=TwoWay}"/>
                 </StackPanel>
                 <StackPanel Margin="5">
                     <Label Content="End date"/>
-                    <DatePicker x:Name="EndDateFilterStat" MinWidth="100" MaxWidth="200" SelectedDate="{Binding EndDate, Mode=TwoWay}"/>
+                    <DatePicker x:Name="EndDateFilterStat" MinWidth="100" MaxWidth="200" SelectedDate="{Binding EndDateStat, Mode=TwoWay}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Get" MinWidth="50" MaxWidth="200" Margin="5" Click="ApplyFilters_Click"/>
-                <Button Content="Clear" MinWidth="50" MaxWidth="200" Margin="5" Click="ClearFilters_Click"/>
+                <Button Content="Get" MinWidth="50" MaxWidth="200" Margin="5" Click="UpdateStatistics_Click"/>
+                <Button Content="Clear" MinWidth="50" MaxWidth="200" Margin="5" Click="ClearStatistics_Click"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10">
             <TextBlock Text="Current statistics on selected parameters:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="5"></TextBlock>
-            <StackPanel HorizontalAlignment="">
-                <TextBlock></TextBlock>
+
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" MinWidth="60" VerticalAlignment="Center">
+                        <TextBlock Text="Total:" FontWeight="Bold" Margin="5"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" MinWidth="150">
+                        <TextBlock x:Name="TotalAmountText" Text="The sum of all receipts: 0" Margin="5"/>
+                        <TextBlock x:Name="TotalCountText" Text="Total count of receipts: 0" Margin="5"/>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
-        </StackPanel>
 
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Text="By Category:" FontWeight="Bold" Margin="5"/>
+                <TextBlock x:Name="CategoryAmountText" Text="Sum: 0" Margin="5"/>
+                <TextBlock x:Name="CategoryCountText" Text="Count: 0" Margin="5"/>
+            </StackPanel>
 
-
-
-        <StackPanel Grid.Column="1" Grid.Row="2">
-
-
-
-
-
-            <TextBlock Text="Statistic:" FontWeight="Bold" Margin="5"/>
-
-            <TextBlock x:Name="TotalAmountText" Text="The sum of all receipts: 0" Margin="5"/>
-            <TextBlock x:Name="CategoryAmountText" Text="Sum of receipts by category: 0" Margin="5"/>
-            <TextBlock x:Name="DateAmountText" Text="Sum of receipts by date: 0" Margin="5"/>
-
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Text="By Date Range:" FontWeight="Bold" Margin="5"/>
+                <TextBlock x:Name="DateAmountText" Text="Sum: 0" Margin="5"/>
+                <TextBlock x:Name="DateCountText" Text="Count: 0" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+            </StackPanel>
         </StackPanel>
 
     </Grid>

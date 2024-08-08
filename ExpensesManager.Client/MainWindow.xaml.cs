@@ -61,7 +61,10 @@ namespace ExpensesManager.Client
             ExpenseTypes = new ObservableCollection<ExpenseType>((ExpenseType[])Enum.GetValues(typeof(ExpenseType)));
             ExpenseTypeComboBox.ItemsSource = ExpenseTypes;
             ExpenseTypeComboBox.SelectedIndex = -1;
-            
+
+            ExpenseTypesStat = new ObservableCollection<ExpenseType>((ExpenseType[])Enum.GetValues(typeof(ExpenseType)));
+            ExpenseTypeComboBoxStat.ItemsSource = ExpenseTypesStat;
+            ExpenseTypeComboBoxStat.SelectedIndex = -1;
         }
 
         private void LoadData(int page, ExpenseType? expenseType = null, DateTime? startDate = null, DateTime? endDate = null)
@@ -236,5 +239,56 @@ namespace ExpensesManager.Client
         }
 
 
+        private void UpdateStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            var totalAmount = _billService.GetTotalAmount();
+            var totalCount = _billService.GetTotalCount();
+            TotalAmountText.Text = $"The sum of all receipts: {totalAmount}";
+            TotalCountText.Text = $"Total count of receipts: {totalCount}";
+
+            if (ExpenseTypeComboBoxStat.SelectedItem is ExpenseType selectedType)
+            {
+                var categoryAmount = _billService.GetTotalAmount(selectedType);
+                var categoryCount = _billService.GetTotalCount(selectedType);
+                CategoryAmountText.Text = $"Sum: {categoryAmount}";
+                CategoryCountText.Text = $"Count: {categoryCount}";
+            }
+            else
+            {
+                CategoryAmountText.Text = "Sum: N/A";
+                CategoryCountText.Text = "Count: N/A";
+            }
+
+            if (StartDateFilterStat.SelectedDate.HasValue || EndDateFilterStat.SelectedDate.HasValue)
+            {
+                var startDate = StartDateFilterStat.SelectedDate ?? DateTime.MinValue;
+                var endDate = EndDateFilterStat.SelectedDate ?? DateTime.MaxValue;
+
+                var dateAmount = _billService.GetTotalAmount(null, startDate, endDate);
+                var dateCount = _billService.GetTotalCount(null, startDate, endDate);
+
+                DateAmountText.Text = $"Sum: {dateAmount}";
+                DateCountText.Text = $"Count: {dateCount}";
+            }
+            else
+            {
+                DateAmountText.Text = "Sum: N/A";
+                DateCountText.Text = "Count: N/A";
+            }
+        }
+
+        private void ClearStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            ExpenseTypeComboBoxStat.SelectedItem = null;
+            StartDateFilterStat.SelectedDate = null;
+            EndDateFilterStat.SelectedDate = null;
+
+            TotalAmountText.Text = "The sum of all receipts: 0";
+            TotalCountText.Text = "Total count of receipts: 0";
+            CategoryAmountText.Text = "Sum: N/A";
+            CategoryCountText.Text = "Count: N/A";
+            DateAmountText.Text = "Sum: N/A";
+            DateCountText.Text = "Count: N/A";
+        }
     }
 }
