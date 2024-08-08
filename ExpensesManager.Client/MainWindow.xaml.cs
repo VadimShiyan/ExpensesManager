@@ -21,8 +21,11 @@ namespace ExpensesManager.Client
 
         public ObservableCollection<Bill> DataList { get; private set; }
         public ObservableCollection<ExpenseType> ExpenseTypes { get; private set; }
+        public ObservableCollection<ExpenseType> ExpenseTypesStat { get; private set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? StartDateStat { get; set; }
         public DateTime? EndDate { get; set; }
+        public DateTime? EndDateStat { get; set; }
 
         public int CurrentPage { get; private set; } = 1;
 
@@ -227,44 +230,10 @@ namespace ExpensesManager.Client
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var count = _billService.GetTotalCount();
-
-            MessageBox.Show("Hello" + count + _data.TotalCount);
-        }
-
-
-
         private void Info_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
-
-
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DeleteButton1_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        
 
 
     }
