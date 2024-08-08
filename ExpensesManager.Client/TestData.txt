@@ -2,11 +2,11 @@
   {
     "Id": "d3b7f2e2-6b8f-4d57-82f2-a5d8a8f723d3",
     "CreatedDate": "2023-08-01T12:30:00Z",
-    "UpdatedDate": null,
+    "UpdatedDate": "2023-08-01T12:30:00Z",
     "Amount": 100.50,
     "Name": "Utility Bill",
-    "Description": "Monthly electricity bill",
-    "ExpenseType": "Food"
+    "Description": "Monthly electricity bill   Monthly electricity bill   Monthly electricity bill   Monthly electricity bill   Monthly electricity bill   Monthly electricity bill",
+    "ExpenseType": "Utilities"
   },
   {
     "Id": "0c4d9172-5f7c-4f79-8b96-9c0e8e02b3b6",
@@ -15,14 +15,14 @@
     "Amount": 250.00,
     "Name": "Groceries",
     "Description": "Weekly grocery shopping",
-    "ExpenseType": "Transport"
+    "ExpenseType": "Food"
   },
   {
     "Id": "a2b1c4d5-7e8f-48f0-9e3d-5d9b7f723e61",
     "CreatedDate": "2023-06-10T14:15:00Z",
-    "UpdatedDate": null,
+    "UpdatedDate": "2023-06-10T14:15:00Z",
     "Amount": 75.00,
-    "Name": "Internet Bill",
+    "Name": "Internet Bill Internet Bill Internet Bill Internet Bill Internet Bill",
     "Description": "Monthly internet bill",
     "ExpenseType": "Entertainment"
   },
@@ -38,10 +38,208 @@
   {
     "Id": "c4d3e6f5-9a7e-49b2-8e5c-7f9a8f625d83",
     "CreatedDate": "2023-05-20T16:45:00Z",
-    "UpdatedDate": null,
+    "UpdatedDate": "2023-05-20T16:45:00Z",
     "Amount": 150.00,
     "Name": "Dining Out",
     "Description": "Dinner at a restaurant",
     "ExpenseType": "Other"
+  },
+  {
+    "Id": "d7b8f9e2-7b8f-4d67-92f2-b5d8b8f723d4",
+    "CreatedDate": "2023-08-02T12:30:00Z",
+    "UpdatedDate": "2023-08-02T12:30:00Z",
+    "Amount": 120.00,
+    "Name": "Water Bill",
+    "Description": "Monthly water bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e02b3b7",
+    "CreatedDate": "2023-07-16T09:45:00Z",
+    "UpdatedDate": "2023-07-21T11:00:00Z",
+    "Amount": 200.00,
+    "Name": "Groceries",
+    "Description": "Weekly grocery shopping Weekly grocery shopping Weekly grocery shopping Weekly grocery shopping Weekly grocery shopping Weekly grocery shopping Weekly grocery shopping",
+    "ExpenseType": "Food"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e02b2b7",
+    "CreatedDate": "2023-06-11T14:15:00Z",
+    "UpdatedDate": "2023-06-11T14:15:00Z",
+    "Amount": 85.00,
+    "Name": "Internet Bill",
+    "Description": "Monthly internet bill",
+    "ExpenseType": "Entertainment"
+  },
+  {
+    "Id": "1d4e9372-6f8c-4f89-8b96-9c1e9e02b2b7",
+    "CreatedDate": "2023-08-04T10:00:00Z",
+    "UpdatedDate": "2023-08-06T12:30:00Z",
+    "Amount": 60.75,
+    "Name": "Gas Bill Gas Bill Gas Bill Gas Bill Gas Bill Gas Bill",
+    "Description": "Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill Monthly gas bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e0112b7",
+    "CreatedDate": "2023-05-21T16:45:00Z",
+    "UpdatedDate": "2023-05-21T16:45:00Z",
+    "Amount": 160.00,
+    "Name": "Dining Out",
+    "Description": "Dinner at a restaurant",
+    "ExpenseType": "Other"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e0333b7",
+    "CreatedDate": "2023-08-03T12:30:00Z",
+    "UpdatedDate": "2023-08-03T12:30:00Z",
+    "Amount": 110.00,
+    "Name": "Electricity Bill",
+    "Description": "Monthly electricity bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e44b2b7",
+    "CreatedDate": "2023-07-17T09:45:00Z",
+    "UpdatedDate": "2023-07-22T11:00:00Z",
+    "Amount": 220.00,
+    "Name": "Groceries",
+    "Description": "Weekly grocery shopping",
+    "ExpenseType": "Food"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e55b2b7",
+    "CreatedDate": "2023-06-12T14:15:00Z",
+    "UpdatedDate": "2023-06-12T14:15:00Z",
+    "Amount": 90.00,
+    "Name": "Internet Bill",
+    "Description": "Monthly internet bill",
+    "ExpenseType": "Entertainment"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e66b2b7",
+    "CreatedDate": "2023-08-05T10:00:00Z",
+    "UpdatedDate": "2023-08-07T12:30:00Z",
+    "Amount": 70.75,
+    "Name": "Gas Bill",
+    "Description": "Monthly gas bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e77b2b7",
+    "CreatedDate": "2023-05-22T16:45:00Z",
+    "UpdatedDate": "2023-05-22T16:45:00Z",
+    "Amount": 170.00,
+    "Name": "Dining Out",
+    "Description": "Dinner at a restaurant",
+    "ExpenseType": "Other"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e88b2b7",
+    "CreatedDate": "2023-08-04T12:30:00Z",
+    "UpdatedDate": "2023-08-04T12:30:00Z",
+    "Amount": 130.00,
+    "Name": "Water Bill",
+    "Description": "Monthly water bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e99b2b7",
+    "CreatedDate": "2023-07-18T09:45:00Z",
+    "UpdatedDate": "2023-07-23T11:00:00Z",
+    "Amount": 230.00,
+    "Name": "Groceries",
+    "Description": "Weekly grocery shopping",
+    "ExpenseType": "Food"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e10b2b7",
+    "CreatedDate": "2023-06-13T14:15:00Z",
+    "UpdatedDate": "2023-06-13T14:15:00Z",
+    "Amount": 95.00,
+    "Name": "Internet Bill",
+    "Description": "Monthly internet bill",
+    "ExpenseType": "Entertainment"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e21b2b7",
+    "CreatedDate": "2023-08-06T10:00:00Z",
+    "UpdatedDate": "2023-08-08T12:30:00Z",
+    "Amount": 80.75,
+    "Name": "Gas Bill",
+    "Description": "Monthly gas bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e31b2b7",
+    "CreatedDate": "2023-05-23T16:45:00Z",
+    "UpdatedDate": "2023-05-23T16:45:00Z",
+    "Amount": 180.00,
+    "Name": "Dining Out",
+    "Description": "Dinner at a restaurant",
+    "ExpenseType": "Other"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e51b2b7",
+    "CreatedDate": "2023-08-05T10:00:00Z",
+    "UpdatedDate": "2023-08-07T12:30:00Z",
+    "Amount": 70.75,
+    "Name": "Gas Bill",
+    "Description": "Monthly gas bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e61b2b7",
+    "CreatedDate": "2023-05-22T16:45:00Z",
+    "UpdatedDate": "2023-05-22T16:45:00Z",
+    "Amount": 170.00,
+    "Name": "Dining Out",
+    "Description": "Dinner at a restaurant",
+    "ExpenseType": "Other"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e71b2b7",
+    "CreatedDate": "2023-08-04T12:30:00Z",
+    "UpdatedDate": "2023-08-04T12:30:00Z",
+    "Amount": 130.00,
+    "Name": "Water Bill",
+    "Description": "Monthly water bill",
+    "ExpenseType": "Utilities"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e81b2b7",
+    "CreatedDate": "2023-07-18T09:45:00Z",
+    "UpdatedDate": "2023-07-23T11:00:00Z",
+    "Amount": 230.00,
+    "Name": "Groceries",
+    "Description": "Weekly grocery shopping",
+    "ExpenseType": "Food"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e65b2b7",
+    "CreatedDate": "2023-07-15T09:45:00Z",
+    "UpdatedDate": "2023-07-20T11:00:00Z",
+    "Amount": 250.00,
+    "Name": "Groceries",
+    "Description": "Weekly grocery shopping",
+    "ExpenseType": "Food"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e96b2b7",
+    "CreatedDate": "2023-06-10T14:15:00Z",
+    "UpdatedDate": "2023-06-10T14:15:00Z",
+    "Amount": 75.00,
+    "Name": "Internet Bill Internet Bill Internet Bill Internet Bill Internet Bill",
+    "Description": "Monthly internet bill",
+    "ExpenseType": "Entertainment"
+  },
+  {
+    "Id": "0d4e9372-6f8c-4f89-8b96-9c1e9e78b2b7",
+    "CreatedDate": "2023-08-03T10:00:00Z",
+    "UpdatedDate": "2023-08-05T12:30:00Z",
+    "Amount": 50.75,
+    "Name": "Gas Bill",
+    "Description": "Monthly gas bill",
+    "ExpenseType": "Utilities"
   }
 ]

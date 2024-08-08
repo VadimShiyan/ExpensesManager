@@ -18,10 +18,21 @@
 
         <StackPanel Grid.Column="0" Grid.Row="0" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Filters:" FontWeight="Bold" Margin="5"></TextBlock>
-                <ComboBox x:Name="ExpenseType" MinWidth="100" MaxWidth="250" Margin="5" SelectionChanged="ExpenseType_SelectionChanged" />
-                <DatePicker x:Name="StartDateFilter" MinWidth="100" MaxWidth="250" Margin="5"/>
-                <DatePicker x:Name="EndDateFilter" MinWidth="100" MaxWidth="250" Margin="5"/>
+                <StackPanel Margin="5" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <TextBlock Text="Filters:" FontSize="16" FontWeight="Bold" Margin="5"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label Content="Expense Type"/>
+                    <ComboBox x:Name="ExpenseTypeComboBox" MinWidth="100" MaxWidth="250"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label Content="Start Date"/>
+                    <DatePicker x:Name="StartDateFilter" MinWidth="100" MaxWidth="250" SelectedDate="{Binding StartDate, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label Content="End Date"/>
+                    <DatePicker x:Name="EndDateFilter" MinWidth="100" MaxWidth="250" SelectedDate="{Binding EndDate, Mode=TwoWay}"/>
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Apply filters" MinWidth="100" MaxWidth="250" Margin="5" Click="ApplyFilters_Click"/>

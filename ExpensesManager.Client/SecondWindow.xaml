@@ -7,6 +7,16 @@
         mc:Ignorable="d"
         Title="SecondWindow" Height="450" Width="800">
     <Grid>
-        
+        <StackPanel Margin="10">
+            <TextBlock Text="Имя" />
+            <TextBox x:Name="BillNameTextBox" />
+            <TextBlock Text="Описание" Margin="0,10,0,0"/>
+            <TextBox x:Name="BillDescriptionTextBox" />
+            <TextBlock Text="Тип" Margin="0,10,0,0"/>
+            <ComboBox x:Name="ExpenseTypeComboBox" />
+            <TextBlock Text="Сумма" Margin="0,10,0,0"/>
+            <TextBox x:Name="BillAmountTextBox" />
+            <Button Content="Сохранить" Margin="0,20,0,0" Click="SaveButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

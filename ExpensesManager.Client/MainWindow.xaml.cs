@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using ExpensesManager.Domain;
 using ExpensesManager.Domain.Entities;
+using ExpensesManager.Domain.Enums;
 using ExpensesManager.Infrastructure.Contracts.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Windows;
-using ExpensesManager.Domain;
-using System.Windows.Controls;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ExpensesManager.Client
 {
@@ -16,8 +17,12 @@ namespace ExpensesManager.Client
     {
         private readonly IBillService _billService;
         private readonly IServiceProvider _serviceProvider; //Внутри MainWindow, или любого другого окна, вы можете использовать DI для получения экземпляра нового окна и его открытия:
-        
+
         public ObservableCollection<Bill> DataList { get; private set; }
+        public ObservableCollection<ExpenseType> ExpenseTypes { get; private set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
         public int CurrentPage { get; private set; } = 1;
 
         public string PageInfo
@@ -47,11 +52,19 @@ namespace ExpensesManager.Client
             InitializeComponent();
 
             LoadData(CurrentPage);
+
+            ExpenseTypes = new ObservableCollection<ExpenseType>((ExpenseType[])Enum.GetValues(typeof(ExpenseType)));
+            ExpenseTypeComboBox.ItemsSource = ExpenseTypes;
+            ExpenseTypeComboBox.SelectedIndex = -1;
         }
 
-        private void LoadData(int page)
+        private void LoadData(int page, ExpenseType? expenseType = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            _data = _billService.GetPaging(page);
+            if (expenseType.HasValue || startDate.HasValue || endDate.HasValue)
+                _data = _billService.GetPagingBySorting(page, expenseType, startDate, endDate);
+
+            else
+                _data = _billService.GetPaging(page);
 
             DataList = new ObservableCollection<Bill>(_data.Items);
 
@@ -59,7 +72,7 @@ namespace ExpensesManager.Client
 
             _totalCount = _data.TotalCount;
 
-            PageInfo = $"Page {CurrentPage} of {(_totalCount + 9) / PageSize}";
+            PageInfo = $"Page {CurrentPage} of {(_totalCount + 9) / PageSize} (Total items:{_totalCount})";
         }
 
         protected void OnPropertyChanged(string name)
@@ -81,11 +94,100 @@ namespace ExpensesManager.Client
             LoadData(CurrentPage);
         }
 
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is Bill bill)
+            {
+                var copyBill = new Bill
+                {
+                    Id = bill.Id,
+                    Name = bill.Name,
+                    Description = bill.Description,
+                    Amount = bill.Amount,
+                    ExpenseType = bill.ExpenseType,
+                    CreatedDate = bill.CreatedDate,
+                    UpdatedDate = bill.UpdatedDate
+                };
 
+                var editWindow = new EditBillWindow(copyBill, ExpenseTypes);
 
+                if (editWindow.ShowDialog() == true)
+                {
+                    try
+                    {
+                        _billService.Update(editWindow.Bill);
+                        LoadData(CurrentPage);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                //editWindow.Owner = this;
+                //editWindow.Show();
 
+                //if (editWindow.Close() =)
+                //{
+                //    MessageBox.Show("закрылось");
+                //    _billService.Update(editWindow.Bill);
+                //    LoadData(CurrentPage);
+                //}
 
+            }
+        }
 
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is Bill bill)
+            {
+                var result = MessageBox.Show($"Are you sure you want to delete the bill: {bill.Name}?",
+                    "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        _billService.DeleteById(bill.Id);
+                        LoadData(CurrentPage);
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        private void ApplyFilters_Click(object sender, RoutedEventArgs e)
+        {
+            var expenseType = ExpenseTypeComboBox.SelectedItem as ExpenseType?;
+            var startDate = StartDateFilter.SelectedDate;
+            var endDate = EndDateFilter.SelectedDate;
+
+            if (!expenseType.HasValue && !startDate.HasValue && !endDate.HasValue)
+                return;
+
+            CurrentPage = 1;
+            LoadData(CurrentPage, expenseType, startDate, endDate);
+        }
+
+        private void ClearFilters_Click(object sender, RoutedEventArgs e)
+        {
+            ExpenseTypeComboBox.SelectedIndex = -1;
+
+            StartDateFilter.SelectedDate = null;
+            EndDateFilter.SelectedDate = null;
+
+            LoadData(CurrentPage);
+        }
 
 
 
@@ -111,20 +213,7 @@ namespace ExpensesManager.Client
             MessageBox.Show("Hello" + count + _data.TotalCount);
         }
 
-        private void ExpenseType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
 
-        }
-
-        private void ApplyFilters_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ClearFilters_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Info_OnClick(object sender, RoutedEventArgs e)
         {
@@ -148,21 +237,6 @@ namespace ExpensesManager.Client
             throw new NotImplementedException();
         }
 
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is Bill bill)
-            {
-                // Откройте диалог для обновления объекта bill
-            }
-        }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is Bill bill)
-            {
-                // Откройте диалог для подтверждения удаления объекта bill
-                // Удалите объект bill из коллекции DataList, если подтверждено
-            }
-        }
     }
 }
