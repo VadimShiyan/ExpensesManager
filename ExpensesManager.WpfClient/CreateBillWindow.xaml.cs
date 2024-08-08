@@ -3,7 +3,7 @@ using ExpensesManager.Domain.Enums;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace ExpensesManager.Client
+namespace ExpensesManager.WpfClient
 {
     /// <summary>
     /// Interaction logic for CreateBillWindow.xaml
@@ -12,6 +12,11 @@ namespace ExpensesManager.Client
     {
         public Bill Bill { get; private set; }
         public ObservableCollection<ExpenseType> ExpenseTypes { get; set; }
+
+        public CreateBillWindow()
+        {
+            InitializeComponent();
+        }
 
         public CreateBillWindow(ObservableCollection<ExpenseType> expenseTypes)
         {
@@ -24,14 +29,12 @@ namespace ExpensesManager.Client
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsValid())
-            {
-                this.DialogResult = true;
-            }
-            else
+            if (!IsValid())
             {
                 MessageBox.Show("Please fill out all required fields.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
+            this.DialogResult = true;
         }
 
         private bool IsValid()

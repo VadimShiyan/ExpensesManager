@@ -20,7 +20,7 @@ namespace ExpensesManager.Application.Services
 
         public PagedResult<Bill> GetPaging(int page)
         {
-            var items = _bills.Skip((page - 1) * PageSize).Take(PageSize).OrderByDescending(b => b.UpdatedDate).ToList();
+            var items = _bills.OrderByDescending(b => b.UpdatedDate).Skip((page - 1) * PageSize).Take(PageSize).ToList();
             var totalCount = _bills.Count();
 
             return new PagedResult<Bill>
@@ -46,7 +46,7 @@ namespace ExpensesManager.Application.Services
 
             var totalCount = query.Count();
 
-            var items = query.Skip((page - 1) * PageSize).Take(PageSize).OrderByDescending(b => b.UpdatedDate).ToList();
+            var items = query.OrderByDescending(b => b.UpdatedDate).Skip((page - 1) * PageSize).Take(PageSize).ToList();
 
             return new PagedResult<Bill>
             {

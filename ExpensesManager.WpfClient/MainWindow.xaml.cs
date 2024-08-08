@@ -2,13 +2,12 @@
 using ExpensesManager.Domain.Entities;
 using ExpensesManager.Domain.Enums;
 using ExpensesManager.Infrastructure.Contracts.Services;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ExpensesManager.Client
+namespace ExpensesManager.WpfClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -16,8 +15,6 @@ namespace ExpensesManager.Client
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private readonly IBillService _billService;
-        private readonly IServiceProvider _serviceProvider; //Внутри MainWindow, или любого другого окна, вы можете использовать DI для получения экземпляра нового окна и его открытия:
-        private readonly EditBillWindow _editBillWindow;
 
         public ObservableCollection<Bill> DataList { get; private set; }
         public ObservableCollection<ExpenseType> ExpenseTypes { get; private set; }
@@ -46,13 +43,16 @@ namespace ExpensesManager.Client
         private PagedResult<Bill> _data;
         private int _totalCount;
 
-        public MainWindow(IBillService billService, IServiceProvider serviceProvider, EditBillWindow editBillWindow)
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        public MainWindow(IBillService billService)
         {
             _billService = billService;
-            _serviceProvider = serviceProvider;
-            _editBillWindow = editBillWindow;
 
-            DataContext = this;// Устанавливаем DataContext на текущий экземпляр MainWindow
+            DataContext = this;
 
             InitializeComponent();
 
@@ -103,6 +103,24 @@ namespace ExpensesManager.Client
             LoadData(CurrentPage);
         }
 
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var createWindow = new CreateBillWindow(ExpenseTypes);
+
+            if (createWindow.ShowDialog() == true)
+            {
+                try
+                {
+                    _billService.AddBill(createWindow.Bill);
+                    LoadData(CurrentPage);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is Bill bill)
@@ -118,17 +136,7 @@ namespace ExpensesManager.Client
                     UpdatedDate = bill.UpdatedDate
                 };
 
-                //var editWindow = new EditBillWindow(copyBill, ExpenseTypes);//после внедрения DI контейнера, все окна нужно вызывать уже через DI, а не напрямую!
-
-                //var editWindow = _editBillWindow;//почему-то не создается каждый раз новый экземпляр, почему, хотя "транзиент" в контейнере?
-
-                // Получение нового экземпляра окна из DI контейнера
-                var editWindow = _serviceProvider.GetRequiredService<EditBillWindow>();
-
-
-                editWindow.Bill = copyBill;
-                editWindow.ExpenseTypes = new ObservableCollection<ExpenseType>(ExpenseTypes);
-                //editWindow.DataContext = copyBill;
+                var editWindow = new EditBillWindow(copyBill, ExpenseTypes);
 
                 if (editWindow.ShowDialog() == true)
                 {
@@ -146,16 +154,6 @@ namespace ExpensesManager.Client
                         MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                //editWindow.Owner = this;
-                //editWindow.Show();
-
-                //if (editWindow.Close() =)
-                //{
-                //    MessageBox.Show("закрылось");
-                //    _billService.Update(editWindow.Bill);
-                //    LoadData(CurrentPage);
-                //}
-
             }
         }
 
@@ -207,37 +205,6 @@ namespace ExpensesManager.Client
 
             LoadData(CurrentPage);
         }
-
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
-        {
-            var createWindow = new CreateBillWindow(ExpenseTypes);
-
-            createWindow.Owner = this;
-            var result = createWindow.ShowDialog();
-
-            if (result == false)
-                return;
-
-
-            if (result == true)
-            {
-                try
-                {
-                    _billService.AddBill(createWindow.Bill);
-                    LoadData(CurrentPage);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void Info_OnClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
 
         private void UpdateStatistics_Click(object sender, RoutedEventArgs e)
         {

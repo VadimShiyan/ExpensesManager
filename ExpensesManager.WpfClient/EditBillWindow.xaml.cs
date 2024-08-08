@@ -3,7 +3,7 @@ using ExpensesManager.Domain.Enums;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace ExpensesManager.Client
+namespace ExpensesManager.WpfClient
 {
     /// <summary>
     /// Interaction logic for EditBillWindow.xaml
@@ -13,46 +13,29 @@ namespace ExpensesManager.Client
         public Bill Bill { get; set; }
         public ObservableCollection<ExpenseType> ExpenseTypes { get; set; }
 
-
-
-        //public EditBillWindow(Bill bill, ObservableCollection<ExpenseType> expenseTypes)
-        //{
-        //    InitializeComponent();
-
-        //    Bill = bill;
-        //    ExpenseTypes = expenseTypes;
-        //    DataContext = this;
-        //}
-
         public EditBillWindow()
         {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        public EditBillWindow(Bill bill, ObservableCollection<ExpenseType> expenseTypes)
         {
-            //DataContext = this; // Установка DataContext при загрузке окна
-            
+            InitializeComponent();
+
+            Bill = bill;
+            ExpenseTypes = expenseTypes;
+            DataContext = this;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var qwr = Bill;
-            var qwr1 = ExpenseTypes;
             if (!IsValid())
             {
                 MessageBox.Show("Please fill out all required fields.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             this.DialogResult = true;
-            //Close();
         }
-
-        //private void CancelButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.DialogResult = false;
-        //    //Close();
-        //}
 
         private bool IsValid()
         {
