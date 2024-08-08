@@ -33,7 +33,9 @@ namespace ExpensesManager.Client
                     // Регистрация основных сервисов и окон
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
-                    services.AddTransient<SecondWindow>(); // Пример второго окна
+                    //services.AddTransient<SecondWindow>(); // Пример второго окна
+                    services.AddTransient<EditBillWindow>();
+                    services.AddTransient<CreateBillWindow>();
 
                     // Регистрация других сервисов и репозиториев
                     services.AddSingleton<IBillService, BillService>();

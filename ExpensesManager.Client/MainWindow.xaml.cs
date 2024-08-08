@@ -17,6 +17,7 @@ namespace ExpensesManager.Client
     {
         private readonly IBillService _billService;
         private readonly IServiceProvider _serviceProvider; //Внутри MainWindow, или любого другого окна, вы можете использовать DI для получения экземпляра нового окна и его открытия:
+        private readonly EditBillWindow _editBillWindow;
 
         public ObservableCollection<Bill> DataList { get; private set; }
         public ObservableCollection<ExpenseType> ExpenseTypes { get; private set; }
@@ -42,10 +43,11 @@ namespace ExpensesManager.Client
         private PagedResult<Bill> _data;
         private int _totalCount;
 
-        public MainWindow(IBillService billService, IServiceProvider serviceProvider)
+        public MainWindow(IBillService billService, IServiceProvider serviceProvider, EditBillWindow editBillWindow)
         {
             _billService = billService;
             _serviceProvider = serviceProvider;
+            _editBillWindow = editBillWindow;
 
             DataContext = this;// Устанавливаем DataContext на текущий экземпляр MainWindow
 
@@ -56,6 +58,7 @@ namespace ExpensesManager.Client
             ExpenseTypes = new ObservableCollection<ExpenseType>((ExpenseType[])Enum.GetValues(typeof(ExpenseType)));
             ExpenseTypeComboBox.ItemsSource = ExpenseTypes;
             ExpenseTypeComboBox.SelectedIndex = -1;
+            
         }
 
         private void LoadData(int page, ExpenseType? expenseType = null, DateTime? startDate = null, DateTime? endDate = null)
@@ -109,7 +112,17 @@ namespace ExpensesManager.Client
                     UpdatedDate = bill.UpdatedDate
                 };
 
-                var editWindow = new EditBillWindow(copyBill, ExpenseTypes);
+                //var editWindow = new EditBillWindow(copyBill, ExpenseTypes);//после внедрения DI контейнера, все окна нужно вызывать уже через DI, а не напрямую!
+
+                //var editWindow = _editBillWindow;//почему-то не создается каждый раз новый экземпляр, почему, хотя "транзиент" в контейнере?
+
+                // Получение нового экземпляра окна из DI контейнера
+                var editWindow = _serviceProvider.GetRequiredService<EditBillWindow>();
+
+
+                editWindow.Bill = copyBill;
+                editWindow.ExpenseTypes = new ObservableCollection<ExpenseType>(ExpenseTypes);
+                //editWindow.DataContext = copyBill;
 
                 if (editWindow.ShowDialog() == true)
                 {
@@ -189,22 +202,41 @@ namespace ExpensesManager.Client
             LoadData(CurrentPage);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        private void OpenSecondWindow_Click(object sender, RoutedEventArgs e)
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            var secondWindow = _serviceProvider.GetRequiredService<SecondWindow>();
-            secondWindow.Show();
+            var createWindow = new CreateBillWindow(ExpenseTypes);
+
+            createWindow.Owner = this;
+            var result = createWindow.ShowDialog();
+
+            if (result == false)
+                return;
+
+
+            if (result == true)
+            {
+                try
+                {
+                    _billService.AddBill(createWindow.Bill);
+                    LoadData(CurrentPage);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
+
+
+
+
+
+
+
+
+
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -232,10 +264,7 @@ namespace ExpensesManager.Client
             throw new NotImplementedException();
         }
 
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        
 
 
     }
